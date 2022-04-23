@@ -21,15 +21,15 @@ request.interceptors.response.use(response => {
     if (res.code === 200) {
         return response 
     } else {
-        console.log(res)
-        Element.Message.error(!res.msg ? '系统异常' : res.msg)
-        return Promise.reject(response.data.msg)
+        console.log("lty" + res)
+        Element.Message.error(!res.message ? '系统异常' : res.message)
+        return Promise.reject(response.data.message)
     }
 }, error => {
     console.log(error)
     console.log(error.response.status)
     if (error.response.data) {
-        error.message = error.response.data.msg
+        error.message = error.response.data.message
     }
 
     if (error.response.status === 401) {

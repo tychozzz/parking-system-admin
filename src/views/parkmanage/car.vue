@@ -99,40 +99,40 @@
 
         <el-dialog title="添加框" :visible.sync="dialogVisibleAdd">
             <span>
-                <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                <el-form :model="addForm" :rules="rules" ref="addForm" label-width="100px" class="demo-addForm">
 
                     <el-form-item label="停车场名称" prop="name">
-                        <el-input v-model="ruleForm.name"></el-input>
+                        <el-input v-model="addForm.name"></el-input>
                     </el-form-item>
 
                     <el-form-item label="车位数" prop="carNum">
-                        <el-input v-model="ruleForm.carNum"></el-input>
+                        <el-input v-model="addForm.carNum"></el-input>
                     </el-form-item>
 
                     <el-form-item label="联系人名字" prop="contactPerson">
-                        <el-input v-model="ruleForm.contactPerson"></el-input>
+                        <el-input v-model="addForm.contactPerson"></el-input>
                     </el-form-item>
 
                     <el-form-item label="联系人电话" prop="contactPhone">
-                        <el-input v-model="ruleForm.contactPhone"></el-input>
+                        <el-input v-model="addForm.contactPhone"></el-input>
                     </el-form-item>
 
                     <el-form-item label="入口数" prop="entranceNum">
-                        <el-input v-model="ruleForm.entranceNum"></el-input>
+                        <el-input v-model="addForm.entranceNum"></el-input>
                     </el-form-item>
 
                     <el-form-item label="出口数" prop="exitNum">
-                        <el-input v-model="ruleForm.exitNum"></el-input>
+                        <el-input v-model="addForm.exitNum"></el-input>
                     </el-form-item>
 
                     <el-form-item label="具体地址" prop="address">
-                        <el-input v-model="ruleForm.address"></el-input>
+                        <el-input v-model="addForm.address"></el-input>
                     </el-form-item>
 
                     <el-form-item label="经纬度" prop="longiAndLati">
-                        <el-input v-model="ruleForm.longitude" style="width: 200px;"></el-input>
+                        <el-input v-model="addForm.longitude" style="width: 200px;"></el-input>
                         &nbsp;,&nbsp;
-                        <el-input v-model="ruleForm.latitude" style="width: 200px;"></el-input>
+                        <el-input v-model="addForm.latitude" style="width: 200px;"></el-input>
                         <div id="amap" style="margin: 25px 0 10px 0;">
                             <el-amap vid="amap" class="amap" :center="center" :plugin="plugin" :events="addMapEvents">
                                 <el-amap-marker vid="component-marker" :position="mapInfo.lnglat"></el-amap-marker>
@@ -156,14 +156,14 @@
                 </el-form>
             </span>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="resetForm()">重 置</el-button>
+                <el-button @click="resetAddForm()">重 置</el-button>
                 <el-button type="primary" @click="submitForm()">确 定</el-button>
             </span>
         </el-dialog>
 
         <el-dialog title="编辑框" :visible.sync="dialogVisibleEdit">
             <span>
-                <el-form :model="editForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+                <el-form :model="editForm" :rules="rules" ref="addForm" label-width="100px" class="demo-addForm">
 
                     <el-form-item label="停车场名称" prop="name">
                         <el-input v-model="editForm.name"></el-input>
@@ -220,7 +220,7 @@
                 </el-form>
             </span>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="resetForm()">重 置</el-button>
+                <el-button @click="resetEditForm()">重 置</el-button>
                 <el-button type="primary" @click="confirmEdit()">确 定</el-button>
             </span>
         </el-dialog>
@@ -257,8 +257,8 @@ export default {
             },
             addMapEvents: {
                 click: e => {
-                    this.ruleForm.longitude = e.lnglat.lng
-                    this.ruleForm.latitude = e.lnglat.lat
+                    this.addForm.longitude = e.lnglat.lng
+                    this.addForm.latitude = e.lnglat.lat
                     this.mapInfo.lnglat = [e.lnglat.lng, e.lnglat.lat];
                 }
             },
@@ -282,7 +282,7 @@ export default {
             total: 0,
             dialogVisibleAdd: false,
             dialogVisibleEdit: false,
-            ruleForm: {
+            addForm: {
                 name: '',
                 carNum: '',
                 contactPerson: '',
@@ -383,11 +383,14 @@ export default {
             this.dialogVisibleEdit = false
             this.editForm = {}
         },
-        resetForm() {
-            this.ruleForm = {}
+        resetAddForm() {
+            this.addForm = {}
+        },
+        resetEditForm() {
+            this.editForm = {}
         },
         submitForm() {
-            this.$axios.post(`/carPark/list/addCarPark`, this.ruleForm).then(res => {
+            this.$axios.post(`/carPark/list/addCarPark`, this.addForm).then(res => {
                 this.$message({
                     type: 'success',
                     message: '添加成功!'
@@ -396,11 +399,11 @@ export default {
             }
             )
             this.dialogVisibleAdd = false
-            this.ruleForm = {}
+            this.addForm = {}
         },
         cropSuccessAdd(data) {
             this.imagecropperShowAdd = false
-            this.ruleForm.image = data.url
+            this.addForm.image = data.url
             this.imagecropperKey = this.imagecropperKey + 1
         },
         closeAdd() {
