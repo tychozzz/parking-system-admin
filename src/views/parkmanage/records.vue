@@ -32,14 +32,14 @@
             </el-table-column>
             <el-table-column label="入场时间" align="center">
                 <template slot-scope="scope">
-                    {{ scope.row.updateTime }}
+                    {{ scope.row.startTime }}
                 </template>
             </el-table-column>
-            <el-table-column label="时长" align="center">
+            <!-- <el-table-column label="时长" align="center">
                 <template slot-scope="scope">
                     {{ scope.row.time }}
                 </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="图片" align="center">
                 <template slot-scope="scope">
                     <el-image style="width: 30px; height: 30px" :src="scope.row.picture" :preview-src-list="[scope.row.picture]">
@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
     data() {
         return {
@@ -99,12 +100,22 @@ export default {
     created() {
         this.getRecordList()
     },
+    // computed: {
+    //     enterTime() {
+    //         let formatTime = moment(parseInt(this.orderDetail.startTime * 1000)).format('yyyy-MM-DD HH:mm:ss')
+    //         return formatTime;
+    //     },
+    // },
     methods: {
         getRecordList(page = 1) {
             this.page = page
             this.$axios.post(`/records/carrecords/selectConditionCarRecords/${this.page}/${this.limit}`, this.carRecordQuery)
             .then(res => {
                 this.list = res.data.data.records
+                this.list.forEach(i => {
+                    i.startTime = moment(parseInt(Number(i.startTime) * 1000)).format('yyyy-MM-DD HH:mm:ss')
+                })
+                // console.log(res.data.data.records)
                 this.total = res.data.data.total
             })
         },

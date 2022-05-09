@@ -118,7 +118,7 @@
                                 <div style="padding: 18px 0; font-size: 14px;">
                                     {{'车牌' + (index+1) + '：' + item}}
                                 </div>
-                                <el-button type="text" size="mini" @click="plateForm.plateList.splice(index,1)">删除</el-button>
+                                <el-button type="text" size="mini" @click="splicePlateList(index)">删除</el-button>
                             </div>
                         </el-card>
                     </el-form-item>
@@ -167,6 +167,9 @@ export default {
         }
     },
     methods: {
+        splicePlateList(index) {
+            this.plateForm.plateList = this.plateForm.plateList.splice(index,1)
+        },
         getCarUserList(page = 1) {
             this.page = page
             this.$axios.post(`/carPark/user/selectConditionCarParkUser/${this.page}/${this.limit}`, this.carParkUserQuery)

@@ -115,9 +115,9 @@
                     <el-form-item label="优惠金额" prop="discountAmount">
                         <el-input-number v-model="addForm.discountAmount" :precision="1" :step="0.1" :max="1000"></el-input-number>
                     </el-form-item>
-                    <el-form-item label="用户ID" prop="userId">
-                        <el-input v-model="addForm.userId" style="width: 200px;"></el-input>
-                        <el-button type="text" @click="checkUserById(addForm.userId)" style="margin-left: 10px;">校验</el-button>
+                    <el-form-item label="用户ID">
+                        <el-transfer filterable filter-placeholder="请输入用户ID或名称" v-model="addForm.userList" :data="userList" :titles="['未选择用户', '已选择用户']" :filter-method="filterMethod" @change="changeUserList">
+                        </el-transfer>
                     </el-form-item>
                     <el-form-item label="有效期" prop="validTime">
                         <el-input-number v-model="addForm.validTime" :min="1" :max="365"></el-input-number>
@@ -164,7 +164,11 @@
 export default {
     data() {
         return {
+            userList: [],
             list: [],
+            filterMethod(query, item) {
+                return item.key.indexOf(query) > -1 || item.label.indexOf(query) > -1;
+            },
             couponQuery: {},
             page: 1,
             limit: 5,
@@ -206,6 +210,9 @@ export default {
         }
     },
     methods: {
+        changeUserList() {
+            console.log(this.addForm.userList)
+        },
         openAdd() {
             this.dialogVisibleAdd = true
         },
@@ -274,25 +281,21 @@ export default {
                     this.getCouponList()
                 })
         },
-        checkUserById(userId) {
-            this.$axios.post(`/carPark/coupon/checkUser/${userId}`)
+        getUserList() {
+            this.$axios.get("/carPark/coupon/getUserList")
                 .then(res => {
-                    if (res.data.data.num === 0) {
-                        this.$message({
-                            type: 'warning',
-                            message: '不存在此用户，请重新输入！'
-                        })
-                    } else {
-                        this.$message({
-                            type: 'success',
-                            message: '存在此用户，请继续操作！'
-                        })
-                    }
+                    res.data.data.userList.forEach(u => {
+                        this.userList.push({
+                            key: u.id,
+                            label: u.name
+                        });
+                    })
                 })
         }
     },
     created() {
         this.getCouponList()
+        this.getUserList()
     }
 }
 </script>
